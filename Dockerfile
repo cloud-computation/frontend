@@ -1,13 +1,18 @@
-FROM node:12 as build
-RUN mkdir /app
-ADD src /app/src/
-ADD public /app/public/
-COPY package.json yarn.lock tsconfig.json /app/
-WORKDIR /app
-RUN yarn install
-RUN yarn build
-FROM nginx:stable
-EXPOSE 80
-COPY --from=build /app/build /var/www/
-COPY nginx-conf/nginx.conf /etc/nginx/conf.d/default.conf
-CMD ["nginx","-g","daemon off;"]
+# build step
+FROM node:12-alpine AS build
+
+WORKDIR /devel
+
+COPY . .
+
+RUN yarn install && yarn run build
+
+# serve step
+FROM nginx:1.17-alpine AS serve
+
+WORKDIR /var/www/cloud
+
+COPY --from=build /devel/build .
+COPY nginx-conf/nginx.conf /etc/nginx/nginx.conf
+
+ENTRYPOINT ["nginx", "-g", "daemon off;"]
