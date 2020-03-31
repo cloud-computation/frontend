@@ -5,7 +5,7 @@ WORKDIR /devel
 
 COPY . .
 
-RUN yarn install && yarn run build
+RUN yarn install && yarn build
 
 # serve step
 FROM nginx:1.17-alpine AS serve
