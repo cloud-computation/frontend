@@ -1,6 +1,7 @@
 import axios, { AxiosInstance } from "axios";
 import { AxiosRequestConfig } from "axios";
 import { mapValues, isString } from "lodash";
+import {TResponse} from "../entity";
 
 export type TransportConfig = Pick<AxiosRequestConfig, "headers" | "baseURL" | "params">;
 
@@ -15,7 +16,7 @@ export class Transport {
         });
     }
 
-    async get<Response>(url: string, params?: object): Promise<Response> {
+    async get<Response>(url: string, params?: object): Promise<TResponse<Response>> {
         const response = await this.instance.get(url, this.config(params));
         return response.data;
     }
@@ -24,7 +25,7 @@ export class Transport {
         url: string,
         data?: Request,
         params?: object,
-    ): Promise<Response> {
+    ): Promise<TResponse<Response>> {
         const response = await this.instance.post(url, data, this.config(params));
         return response.data;
     }
@@ -33,12 +34,12 @@ export class Transport {
         url: string,
         data: Request,
         params?: object,
-    ): Promise<Response> {
+    ): Promise<TResponse<Response>> {
         const response = await this.instance.put(url, data, this.config(params));
         return response.data;
     }
 
-    async delete<Response = void>(url: string, params?: object): Promise<Response> {
+    async delete<Response = void>(url: string, params?: object): Promise<TResponse<Response>> {
         const response = await this.instance.delete(url, this.config(params));
         return response.data;
     }

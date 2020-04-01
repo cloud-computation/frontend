@@ -1,19 +1,18 @@
 import React from "react";
-import { css, cx } from "emotion";
-import { useAuth } from "../hooks";
-import { ISignInData } from "../entity";
+import { css } from "emotion";
+import { ISignUpData } from "../entity";
 import { Button, Card, Typography } from "@material-ui/core";
 import { TextField, CustomForm } from "../components";
-import { AppContext } from "../context";
 import * as Yup from "yup";
 import { Link } from "react-router-dom";
-
-interface Props {
-    setLogged(value: boolean): void;
-}
+import { useAuth, useCustomSnackbar } from "../hooks";
+import { getServerError } from "../utils";
 
 const validationSchema = Yup.object().shape({
     email: Yup.string().email("Некорректный e-mail").required("Обязательно для заполнения"),
+    login: Yup.string()
+        .required("Обязательно для заполнения")
+        .min(4, "Пароль должен быть не меньше 4 символов"),
     password: Yup.string()
         .required("Обязательно для заполнения")
         .length(6, "Пароль должен быть не меньше 6 символов"),
@@ -45,29 +44,32 @@ const styles = {
     `,
 };
 
-export const SignIn = (props: Props) => {
-    const { setLogged } = props;
-    const { signIn } = useAuth();
+export const SignUp = () => {
+    const { signUp } = useAuth();
+    const { showErrorSnackbar, showSuccessSnackbar } = useCustomSnackbar();
 
-    const handleSignIn = (data: ISignInData) => {
-        signIn(data)
-            .then(() => {
-                setLogged(true);
-                AppContext.getHistory().push("/");
-            })
-            .catch(console.error);
+    const onSubmit = (data: ISignUpData) => {
+        signUp(data)
+            .then(() => showSuccessSnackbar("Вы успешно зарегистрированы!"))
+            .catch((err) => {
+                const error = getServerError(err);
+                if (error) {
+                    showErrorSnackbar(error.title);
+                }
+            });
     };
 
     return (
-        <CustomForm<ISignInData>
-            onSubmit={handleSignIn}
+        <CustomForm<ISignUpData>
+            onSubmit={onSubmit}
             validationSchema={validationSchema}
             render={(form) => (
                 <div className={styles.wrapper}>
                     <Card className={styles.card}>
                         <Typography variant={"h4"} align={"center"}>
-                            Войти
+                            Регистрация
                         </Typography>
+                        <TextField name={"login"} label={"Логин"} />
                         <TextField name={"email"} label={"Email"} />
                         <TextField name={"password"} label={"Пароль"} type={"password"} />
                         <Button
@@ -77,22 +79,11 @@ export const SignIn = (props: Props) => {
                             onClick={form?.submitForm}
                             disabled={!form.isValid}
                         >
-                            Войти
+                            Регистрация
                         </Button>
                         <div className={styles.footer}>
-                            <Link to={"/sign-up"} className={styles.link}>
-                                Регистрация
-                            </Link>
-                            <Link
-                                to={"/forgot-password"}
-                                className={cx(
-                                    styles.link,
-                                    css`
-                                        margin-left: auto;
-                                    `,
-                                )}
-                            >
-                                Не могу вспомнить пароль
+                            <Link to={"/sign-in"} className={styles.link}>
+                                Войти
                             </Link>
                         </div>
                     </Card>

@@ -8,3 +8,8 @@ export interface IFirebaseConfig {
     appId: string;
     measurementId: string;
 }
+
+export interface IFirebaseError {
+    code: string;
+    message: string;
+}

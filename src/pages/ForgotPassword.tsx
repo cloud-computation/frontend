@@ -1,22 +1,13 @@
 import React from "react";
 import { css, cx } from "emotion";
-import { useAuth } from "../hooks";
 import { ISignInData } from "../entity";
 import { Button, Card, Typography } from "@material-ui/core";
 import { TextField, CustomForm } from "../components";
-import { AppContext } from "../context";
 import * as Yup from "yup";
 import { Link } from "react-router-dom";
 
-interface Props {
-    setLogged(value: boolean): void;
-}
-
 const validationSchema = Yup.object().shape({
     email: Yup.string().email("Некорректный e-mail").required("Обязательно для заполнения"),
-    password: Yup.string()
-        .required("Обязательно для заполнения")
-        .length(6, "Пароль должен быть не меньше 6 символов"),
 });
 
 const styles = {
@@ -45,31 +36,20 @@ const styles = {
     `,
 };
 
-export const SignIn = (props: Props) => {
-    const { setLogged } = props;
-    const { signIn } = useAuth();
-
-    const handleSignIn = (data: ISignInData) => {
-        signIn(data)
-            .then(() => {
-                setLogged(true);
-                AppContext.getHistory().push("/");
-            })
-            .catch(console.error);
-    };
-
+export const ForgotPassword = () => {
     return (
         <CustomForm<ISignInData>
-            onSubmit={handleSignIn}
             validationSchema={validationSchema}
             render={(form) => (
                 <div className={styles.wrapper}>
                     <Card className={styles.card}>
                         <Typography variant={"h4"} align={"center"}>
-                            Войти
+                            Восстановление пароля
+                        </Typography>
+                        <Typography variant={"h6"} align={"center"}>
+                            На введенный е-mail мы отправим новый пароль
                         </Typography>
                         <TextField name={"email"} label={"Email"} />
-                        <TextField name={"password"} label={"Пароль"} type={"password"} />
                         <Button
                             fullWidth
                             variant="contained"
@@ -84,7 +64,7 @@ export const SignIn = (props: Props) => {
                                 Регистрация
                             </Link>
                             <Link
-                                to={"/forgot-password"}
+                                to={"/sign-in"}
                                 className={cx(
                                     styles.link,
                                     css`
@@ -92,7 +72,7 @@ export const SignIn = (props: Props) => {
                                     `,
                                 )}
                             >
-                                Не могу вспомнить пароль
+                                Войти
                             </Link>
                         </div>
                     </Card>
