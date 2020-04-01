@@ -10,5 +10,5 @@ export function signIn(data: ISignInData) {
 }
 
 export function forgotPassword(data: {email: string}) {
-    return transport.post<{email: string}, IResponseMessage>("/auth/forgotPassword");
+    return transport.post<{email: string}, IResponseMessage>("/auth/forgotPassword", data);
 }
