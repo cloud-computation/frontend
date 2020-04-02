@@ -64,6 +64,7 @@ export const Header = () => {
         localStorage.removeItem("token");
         userContext.setUser(undefined);
         onCloseLogoutPopup();
+        AppContext.getHistory().push(`/`);
     };
 
     const goTo = (path: string) => {
