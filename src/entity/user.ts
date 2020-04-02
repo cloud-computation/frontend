@@ -11,3 +11,7 @@ export interface IUserContext {
     user: IUser | undefined;
     setUser: Dispatch<SetStateAction<IUser | undefined>>;
 }
+
+export interface IUpdateAvatar {
+    avatar: File;
+}

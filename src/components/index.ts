@@ -6,3 +6,5 @@ export * from "./jss-provider";
 export * from "./popup";
 export * from "./menu";
 export * from "./confirm-popup";
+export * from "./avatar";
+export * from "./upload-avatar";
