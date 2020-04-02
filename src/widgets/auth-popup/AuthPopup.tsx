@@ -74,7 +74,6 @@ export const AuthPopup = (props: Props) => {
         signIn(data)
             .then((response) => {
                 transport.setToken(response.data.token);
-                localStorage.setItem("token", response.data.token);
                 login()
                     .then((response) => {
                         setUser(response.data);

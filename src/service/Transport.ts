@@ -46,7 +46,7 @@ export class Transport {
 
     setToken(token: string): void {
         this.token = token;
-        localStorage.setItem("token", JSON.stringify(token));
+        localStorage.setItem("token", token);
     }
 
     formatToFormData(params: {}): FormData {

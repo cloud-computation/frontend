@@ -12,7 +12,7 @@ export const PrivateRoute = (props: IPrivateRouteProps) => {
         <Route
             {...rest}
             render={(routeProps: RouteComponentProps) =>
-                auth ? render(routeProps) : <Redirect exact to={"/sign-in"} />
+                auth ? render(routeProps) : <Redirect exact to={"/"} />
             }
         />
     );
