@@ -86,6 +86,7 @@ export const Header = () => {
                 <Container
                     className={css`
                         display: flex;
+                        align-items: center;
                     `}
                 >
                     <Link to={"/"} className={styles.link}>
