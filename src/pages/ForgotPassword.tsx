@@ -1,10 +1,11 @@
 import React from "react";
 import { css, cx } from "emotion";
-import { ISignInData } from "../entity";
 import { Button, Card, Typography } from "@material-ui/core";
 import { TextField, CustomForm } from "../components";
 import * as Yup from "yup";
 import { Link } from "react-router-dom";
+import { useAuth, useCustomSnackbar } from "../hooks";
+import { getServerError } from "../utils";
 
 const validationSchema = Yup.object().shape({
     email: Yup.string().email("Некорректный e-mail").required("Обязательно для заполнения"),
@@ -37,8 +38,25 @@ const styles = {
 };
 
 export const ForgotPassword = () => {
+    const { forgotPassword } = useAuth();
+    const { showErrorSnackbar, showSuccessSnackbar } = useCustomSnackbar();
+
+    const onSubmit = (data: { email: string }) => {
+        forgotPassword(data)
+            .then(() => {
+                showSuccessSnackbar("Пароль успешно отправлен");
+            })
+            .catch((err) => {
+                const error = getServerError(err);
+                if (error) {
+                    showErrorSnackbar(error.title);
+                }
+            });
+    };
+
     return (
-        <CustomForm<ISignInData>
+        <CustomForm<{ email: string }>
+            onSubmit={onSubmit}
             validationSchema={validationSchema}
             render={(form) => (
                 <div className={styles.wrapper}>
@@ -57,7 +75,7 @@ export const ForgotPassword = () => {
                             onClick={form?.submitForm}
                             disabled={!form.isValid}
                         >
-                            Войти
+                            Отправить
                         </Button>
                         <div className={styles.footer}>
                             <Link to={"/sign-up"} className={styles.link}>

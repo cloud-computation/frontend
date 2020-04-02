@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from "react";
+import React, { FC } from "react";
 import { Route, Redirect, RouteProps, RouteComponentProps } from "react-router";
 
 interface IPublicRouteProps extends RouteProps {

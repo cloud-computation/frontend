@@ -1,12 +1,13 @@
 import React from "react";
 import { css, cx } from "emotion";
-import { useAuth } from "../hooks";
+import {useAuth, useCustomSnackbar} from "../hooks";
 import { ISignInData } from "../entity";
 import { Button, Card, Typography } from "@material-ui/core";
 import { TextField, CustomForm } from "../components";
 import { AppContext } from "../context";
 import * as Yup from "yup";
 import { Link } from "react-router-dom";
+import {getServerError} from "../utils";
 
 interface Props {
     setLogged(value: boolean): void;
@@ -16,7 +17,7 @@ const validationSchema = Yup.object().shape({
     email: Yup.string().email("Некорректный e-mail").required("Обязательно для заполнения"),
     password: Yup.string()
         .required("Обязательно для заполнения")
-        .length(6, "Пароль должен быть не меньше 6 символов"),
+        .min(6, "Пароль должен быть не меньше 6 символов"),
 });
 
 const styles = {
@@ -48,6 +49,7 @@ const styles = {
 export const SignIn = (props: Props) => {
     const { setLogged } = props;
     const { signIn } = useAuth();
+    const { showErrorSnackbar } = useCustomSnackbar();
 
     const handleSignIn = (data: ISignInData) => {
         signIn(data)
@@ -55,7 +57,12 @@ export const SignIn = (props: Props) => {
                 setLogged(true);
                 AppContext.getHistory().push("/");
             })
-            .catch(console.error);
+            .catch((err) => {
+                const error = getServerError(err);
+                if (error) {
+                    showErrorSnackbar(error.title);
+                }
+            });
     };
 
     return (

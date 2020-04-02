@@ -1,36 +1,37 @@
-import React, { useState } from "react";
-import { IConfig } from "../entity";
+import React, { createContext, useEffect, useState } from "react";
+import { IConfig, IUser, IUserContext } from "../entity";
 import { transport } from "../service";
-import { Router } from "react-router";
+import { Route, Router } from "react-router";
 import { AppContext } from "../context";
-import { PublicRoute } from "../components/public-route";
-import { ForgotPassword, SignIn, SignUp } from "../pages";
+import { Main } from "../pages";
 import { SnackbarProvider } from "notistack";
+import { useAuth } from "../hooks";
 
 const config: IConfig = require("../config/config.json"); // данные находятся в консоли firebase
-
 transport.init(config.serverUrl);
+export const UserContext = createContext<IUserContext | undefined>(undefined);
 
 export const App = () => {
-    const [logged, setLogged] = useState(false);
+    const [user, setUser] = useState<IUser | undefined>(undefined);
+    const { login } = useAuth();
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (token) {
+            transport.setToken(token);
+            login().then((response) => setUser(response.data));
+        }
+    }, []);
 
     return (
-        <SnackbarProvider>
-            <Router history={AppContext.getHistory()}>
-                <PublicRoute
-                    auth={logged}
-                    path={"/sign-in"}
-                    exact
-                    render={() => <SignIn setLogged={setLogged} />}
-                />
-                <PublicRoute auth={logged} path={"/sign-up"} exact render={() => <SignUp />} />
-                <PublicRoute
-                    auth={logged}
-                    path={"/forgot-password"}
-                    exact
-                    render={() => <ForgotPassword />}
-                />
-            </Router>
-        </SnackbarProvider>
+        <UserContext.Provider value={{ user, setUser }}>
+            <SnackbarProvider>
+                <Router history={AppContext.getHistory()}>
+                    <Route path={"/"}>
+                        <Main />
+                    </Route>
+                </Router>
+            </SnackbarProvider>
+        </UserContext.Provider>
     );
 };

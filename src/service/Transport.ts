@@ -66,6 +66,7 @@ export class Transport {
             headers: {
                 ...this.headers,
                 "Content-Type": "application/json",
+                token: this.token
             },
             params,
         };
