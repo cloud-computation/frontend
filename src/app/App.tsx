@@ -19,22 +19,12 @@ export const App = () => {
     const { login } = useAuth();
 
     useEffect(() => {
-        window.onbeforeunload = () => {
-            localStorage.setItem("pathBeforeReload", window.location.pathname);
-        }
-    }, []);
-
-    useEffect(() => {
         const token = localStorage.getItem("token");
         if (token) {
             transport.setToken(token);
             login().then((response) => {
                 setUser(response.data);
                 setLogged(true);
-                const redirectPath = localStorage.getItem("pathBeforeReload");
-                if (redirectPath) {
-                    AppContext.getHistory().push(redirectPath);
-                }
             });
         }
     }, []);

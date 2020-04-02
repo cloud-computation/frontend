@@ -1,13 +1,14 @@
-import React, {useContext, useState} from "react";
-import {UserContext} from "../../app";
-import {AppContext} from "../../context";
-import {Avatar, Button, IconButton, Tooltip} from "@material-ui/core";
-import {AccountCircle} from "@material-ui/icons";
-import {Menu} from "../menu";
-import {AuthPopup} from "../../widgets/auth-popup";
-import {ConfirmPopup} from "../confirm-popup";
-import {css} from "emotion";
-import {Container} from "../container";
+import React, { useContext, useState } from "react";
+import { UserContext } from "../../app";
+import { AppContext } from "../../context";
+import { Avatar, Button, IconButton, Tooltip } from "@material-ui/core";
+import { AccountCircle } from "@material-ui/icons";
+import { Menu } from "../menu";
+import { AuthPopup } from "../../widgets/auth-popup";
+import { ConfirmPopup } from "../confirm-popup";
+import { css } from "emotion";
+import { Container } from "../container";
+import { Link } from "react-router-dom";
 
 const styles = {
     header: css`
@@ -33,7 +34,15 @@ const styles = {
     profile: css`
         margin-left: auto;
     `,
+    link: css`
+        text-decoration: none;
+    `,
+    image: css`
+        height: 60px;
+    `,
 };
+
+const LOGO = require("./logo.png");
 
 export const Header = () => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -74,7 +83,14 @@ export const Header = () => {
     return (
         <>
             <div className={styles.header}>
-                <Container className={css`display: flex`}>
+                <Container
+                    className={css`
+                        display: flex;
+                    `}
+                >
+                    <Link to={"/"} className={styles.link}>
+                        <img src={LOGO} alt="" className={styles.image} />
+                    </Link>
                     <div className={styles.profile}>
                         {userContext.user ? (
                             <>
