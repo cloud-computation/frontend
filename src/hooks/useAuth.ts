@@ -1,11 +1,12 @@
-import { IResponseMessage, ISignInData, ISignUpData, TResponse } from "../entity";
+import {IResponseMessage, ISignInData, ISignUpData, IUser, TResponse} from "../entity";
 import { useCallback } from "react";
 import { AuthAPI } from "../api";
 
 export function useAuth(): {
-    signIn: (data: ISignInData) => Promise<TResponse<IResponseMessage>>;
+    signIn: (data: ISignInData) => Promise<TResponse<{token: string}>>;
     signUp: (data: ISignInData) => Promise<TResponse<IResponseMessage>>;
-    forgotPassword: (data: ISignInData) => Promise<TResponse<IResponseMessage>>;
+    forgotPassword: (data: { email: string }) => Promise<TResponse<IResponseMessage>>;
+    login: () => Promise<TResponse<IUser>>;
 } {
     const signIn = useCallback((data: ISignInData) => {
         return AuthAPI.signIn(data);
@@ -19,5 +20,9 @@ export function useAuth(): {
         return AuthAPI.forgotPassword(data);
     }, []);
 
-    return { signIn, forgotPassword, signUp };
+    const login = useCallback(() => {
+        return AuthAPI.login();
+    }, []);
+
+    return { signIn, forgotPassword, signUp, login };
 }
