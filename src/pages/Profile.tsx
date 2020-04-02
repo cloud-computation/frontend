@@ -8,7 +8,7 @@ import { CustomForm } from "../components/custom-form";
 import { IUser } from "../entity";
 import { TextField } from "../components/text-field";
 import { Button, Typography } from "@material-ui/core";
-import { isEqual } from "lodash";
+import { isEqual, omit } from "lodash";
 import { useCustomSnackbar, useUser } from "../hooks";
 import { getServerError } from "../utils";
 
@@ -64,7 +64,7 @@ export const Profile = () => {
     };
 
     const handleUpdateUser = (data: Partial<IUser>) => {
-        updateUser(data)
+        updateUser(omit(data, ["avatar"]))
             .then((response) => {
                 userContext.setUser(response.data);
                 showSuccessSnackbar("Успешно обновлено");
