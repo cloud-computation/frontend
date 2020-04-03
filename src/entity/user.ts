@@ -5,6 +5,8 @@ export interface IUser {
     login: string;
     email: string;
     avatar?: string;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export interface IUserContext {
@@ -15,3 +17,10 @@ export interface IUserContext {
 export interface IUpdateAvatar {
     avatar: File;
 }
+
+export interface IChangePassword {
+    password: string;
+    newPassword: string;
+    repeatPassword: string;
+}
+

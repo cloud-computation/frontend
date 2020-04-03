@@ -1,5 +1,5 @@
-import {IUpdateAvatar, IUser, TResponse} from "../entity";
-import {useCallback, useEffect, useState} from "react";
+import {IChangePassword, IUpdateAvatar, IUser, TResponse} from "../entity";
+import {useCallback, useState} from "react";
 import { UserAPI } from "../api";
 
 export function useUser(): {
@@ -8,6 +8,7 @@ export function useUser(): {
     updateUser: (user: Partial<IUser>) => Promise<TResponse<IUser>>;
     uploadAvatar: (data: IUpdateAvatar) => Promise<TResponse<IUser>>;
     deleteAvatar: () => Promise<TResponse<IUser>>;
+    changePassword: (data: IChangePassword) => Promise<TResponse<undefined>>;
 } {
     const [user, setUser] = useState<IUser | undefined>(undefined);
 
@@ -27,5 +28,9 @@ export function useUser(): {
         return UserAPI.deleteAvatar();
     }, []);
 
-    return { user, deleteAvatar, getUser, updateUser, uploadAvatar };
+    const changePassword = useCallback((data: IChangePassword) => {
+        return UserAPI.changePassword(data);
+    }, []);
+
+    return { user, deleteAvatar, getUser, updateUser, uploadAvatar, changePassword };
 }

@@ -9,6 +9,7 @@ import { ConfirmPopup } from "../confirm-popup";
 import { css } from "emotion";
 import { Container } from "../container";
 import { Link } from "react-router-dom";
+import {transport} from "../../service";
 
 const styles = {
     header: css`
@@ -72,6 +73,7 @@ export const Header = () => {
         handleMenuClose();
         localStorage.removeItem("token");
         userContext.setUser(undefined);
+        transport.setToken(undefined);
         onCloseLogoutPopup();
         AppContext.getHistory().push(`/`);
     };

@@ -1,4 +1,4 @@
-import { IResponseMessage, ISignInData, ISignUpData, IUser, TResponse } from "../entity";
+import { IResponseMessage, ISignInData, ISignUpData, IUser } from "../entity";
 import { transport } from "../service";
 
 export function signUp(data: ISignUpData) {

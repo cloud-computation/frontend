@@ -5,34 +5,59 @@ import { css } from "emotion";
 import { UserContext } from "../app";
 import { UploadAvatar } from "../components/upload-avatar";
 import { CustomForm } from "../components/custom-form";
-import { IUser } from "../entity";
+import { IChangePassword, IUser } from "../entity";
 import { TextField } from "../components/text-field";
-import { Button, Typography } from "@material-ui/core";
+import { Button, Card, Typography } from "@material-ui/core";
 import { isEqual, omit } from "lodash";
 import { useCustomSnackbar, useUser } from "../hooks";
-import { getServerError } from "../utils";
+import { equalTo, getServerError } from "../utils";
+import * as Yup from "yup";
 
 const styles = {
     content: css`
         padding: 40px 0;
-        display: flex;
+        display: grid;
+        grid-template-columns: 300px 1fr 1fr;
+        grid-column-gap: 40px;
         align-items: flex-start;
     `,
     avatar: css`
-        width: 300px;
+        padding: 20px;
     `,
     form: css`
-        width: 500px;
         display: grid;
         grid-template-columns: 1fr;
         grid-row-gap: 30px;
-        margin-left: 40px;
+        padding: 20px;
     `,
 };
 
+const changeUserDataValidationSchema = Yup.object().shape({
+    email: Yup.string().email("Некорректный e-mail").required("Обязательно для заполнения"),
+    login: Yup.string()
+        .required("Обязательно для заполнения")
+        .min(4, "Пароль должен быть не меньше 4 символов"),
+});
+
+Yup.addMethod(Yup.string, "equalTo", equalTo);
+
+const changePasswordValidationSchema = Yup.object().shape({
+    password: Yup.string()
+        .min(6, "Пароль должен сожержать минимум 6 символов")
+        .required("Поле обязательно для заполнения"),
+    newPassword: Yup.string()
+        .equalTo(Yup.ref("repeatPassword"), "Новый пароль и повтор пароля должны совпадать")
+        .min(6, "Пароль должен сожержать минимум 6 символов")
+        .required("Поле обязательно для заполнения"),
+    repeatPassword: Yup.string()
+        .equalTo(Yup.ref("newPassword"), "Новый пароль и повтор пароля должны совпадать")
+        .min(6, "Пароль должен сожержать минимум 6 символов")
+        .required("Поле обязательно для заполнения"),
+});
+
 export const Profile = () => {
     const userContext = useContext(UserContext);
-    const { uploadAvatar, updateUser, deleteAvatar } = useUser();
+    const { uploadAvatar, updateUser, deleteAvatar, changePassword } = useUser();
     const { showErrorSnackbar, showSuccessSnackbar } = useCustomSnackbar();
 
     const handleAvatar = (file: File) => {
@@ -77,26 +102,44 @@ export const Profile = () => {
             });
     };
 
+    const handleChangePassword = (data: IChangePassword) => {
+        changePassword(data)
+            .then(() => showSuccessSnackbar("Успешно обновлено"))
+            .catch((err) => {
+                const error = getServerError(err);
+                if (error) {
+                    showErrorSnackbar(error.title);
+                }
+            });
+    };
+
     return (
         <>
             <Header />
             <Container>
-                <Typography variant={"h3"}>
+                <Typography
+                    variant={"h3"}
+                    className={css`
+                        margin-top: 40px !important;
+                    `}
+                >
                     Профиль пользователя {userContext.user.login}
                 </Typography>
                 <div className={styles.content}>
-                    <div className={styles.avatar}>
+                    <Card className={styles.avatar} variant={"outlined"}>
                         <UploadAvatar
                             src={userContext.user.avatar}
                             onDeleteAvatar={handleDeleteAvatar}
                             uploadAvatar={handleAvatar}
                         />
-                    </div>
+                    </Card>
                     <CustomForm<Partial<IUser>>
                         data={userContext.user}
+                        validationSchema={changeUserDataValidationSchema}
                         onSubmit={handleUpdateUser}
                         render={(form) => (
-                            <div className={styles.form}>
+                            <Card className={styles.form} variant={"outlined"}>
+                                <Typography variant={"h5"}>Изменить данные</Typography>
                                 <TextField
                                     name={"email"}
                                     label={"Email"}
@@ -118,7 +161,30 @@ export const Profile = () => {
                                 >
                                     Сохранить
                                 </Button>
-                            </div>
+                            </Card>
+                        )}
+                    />
+                    <CustomForm<IChangePassword>
+                        onSubmit={handleChangePassword}
+                        validationSchema={changePasswordValidationSchema}
+                        render={(form) => (
+                            <Card variant={"outlined"} className={styles.form}>
+                                <Typography variant={"h5"}>Изменить пароль</Typography>
+                                <TextField name={"password"} label={"Текущий пароль"} />
+                                <TextField name={"newPassword"} label={"Новый пароль"} />
+                                <TextField name={"repeatPassword"} label={"Повтор пароля"} />
+                                <Button
+                                    fullWidth
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={form?.submitForm}
+                                    disabled={
+                                        !form.isValid || isEqual(form?.values, form?.initialValues)
+                                    }
+                                >
+                                    Сохранить
+                                </Button>
+                            </Card>
                         )}
                     />
                 </div>

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Popup } from "../../components/popup";
 import { ISignInData, ISignUpData, IUser } from "../../entity";
-import { Button, Card, Typography } from "@material-ui/core";
+import { Button, Typography } from "@material-ui/core";
 import { TextField } from "../../components/text-field";
 import { css, cx } from "emotion";
 import { CustomForm } from "../../components/custom-form";
