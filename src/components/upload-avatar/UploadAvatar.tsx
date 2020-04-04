@@ -1,13 +1,16 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from "react";
-import { css } from "emotion";
+import { css, cx } from "emotion";
 import { Button, IconButton, LinearProgress, Typography } from "@material-ui/core";
 import { Close, CloudUpload, Edit } from "@material-ui/icons";
-import { Avatar, ConfirmPopup } from "../../components";
+import { ConfirmPopup } from "../../components";
 import { useFile } from "../../hooks";
+import {useFormikContext} from "formik";
 
 interface IUploadAvatarProps {
     src?: string;
     loading?: boolean;
+    imageClassName?: string;
+    name: string;
 
     onDeleteAvatar?(): void;
 
@@ -34,7 +37,7 @@ const styles = {
         }
     `,
     avatar: css`
-        margin-bottom: 20px;
+        margin: 20px 0;
     `,
     button: css`
         width: 100%;
@@ -48,22 +51,29 @@ const styles = {
     `,
     error: css`
         margin-top: 20px !important;
-    `
+    `,
 };
 
 export const UploadAvatar = (props: IUploadAvatarProps) => {
-    const { onDeleteAvatar, uploadAvatar, loading } = props;
+    const { onDeleteAvatar, uploadAvatar, loading, imageClassName, name } = props;
     const [modalOpen, setModalOpen] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
     const { src, file, error, setSrc, deleteFile, loadFile } = useFile({
         whiteList: ["png", "jpg", "pdf", "gif", "jpeg"],
         maxFileSize: 1048576,
     });
+    const { setFieldValue } = useFormikContext();
 
     useEffect(() => {
         setSrc(props.src);
         setSrc(props.src);
     }, [props.src, setSrc]);
+
+    useEffect(() => {
+        if (setFieldValue) {
+            setFieldValue(name, src);
+        }
+    }, [src]);
 
     function onModalOpen(): void {
         setModalOpen(true);
@@ -86,6 +96,7 @@ export const UploadAvatar = (props: IUploadAvatarProps) => {
             return;
         }
         loadFile(file);
+        setFieldValue("file", file);
     };
 
     const deleteAvatar = () => {
@@ -116,7 +127,7 @@ export const UploadAvatar = (props: IUploadAvatarProps) => {
                         </IconButton>
                     )}
                 </div>
-                <Avatar url={src} className={styles.avatar} />
+                <img src={src} className={cx(styles.avatar, imageClassName)} alt={""} />
                 <Button
                     variant="contained"
                     color="primary"

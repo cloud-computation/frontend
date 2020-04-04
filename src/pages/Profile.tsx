@@ -24,6 +24,9 @@ const styles = {
     avatar: css`
         padding: 20px;
     `,
+    image: css`
+        height: 300px;
+    `,
     form: css`
         display: grid;
         grid-template-columns: 1fr;
@@ -126,42 +129,46 @@ export const Profile = () => {
                     Профиль пользователя {userContext.user.login}
                 </Typography>
                 <div className={styles.content}>
-                    <Card className={styles.avatar} variant={"outlined"}>
-                        <UploadAvatar
-                            src={userContext.user.avatar}
-                            onDeleteAvatar={handleDeleteAvatar}
-                            uploadAvatar={handleAvatar}
-                        />
-                    </Card>
                     <CustomForm<Partial<IUser>>
                         data={userContext.user}
                         validationSchema={changeUserDataValidationSchema}
                         onSubmit={handleUpdateUser}
                         render={(form) => (
-                            <Card className={styles.form} variant={"outlined"}>
-                                <Typography variant={"h5"}>Изменить данные</Typography>
-                                <TextField
-                                    name={"email"}
-                                    label={"Email"}
-                                    InputLabelProps={{ shrink: !!form?.values?.login }}
-                                />
-                                <TextField
-                                    name={"login"}
-                                    label={"Логин"}
-                                    InputLabelProps={{ shrink: !!form?.values?.login }}
-                                />
-                                <Button
-                                    fullWidth
-                                    variant="contained"
-                                    color="primary"
-                                    onClick={form?.submitForm}
-                                    disabled={
-                                        !form.isValid || isEqual(form?.values, form?.initialValues)
-                                    }
-                                >
-                                    Сохранить
-                                </Button>
-                            </Card>
+                            <>
+                                <Card className={styles.avatar} variant={"outlined"}>
+                                    <UploadAvatar
+                                        src={userContext.user.avatar}
+                                        onDeleteAvatar={handleDeleteAvatar}
+                                        uploadAvatar={handleAvatar}
+                                        imageClassName={styles.image}
+                                        name={"avatar"}
+                                    />
+                                </Card>
+                                <Card className={styles.form} variant={"outlined"}>
+                                    <Typography variant={"h5"}>Изменить данные</Typography>
+                                    <TextField
+                                        name={"email"}
+                                        label={"Email"}
+                                        InputLabelProps={{ shrink: !!form?.values?.login }}
+                                    />
+                                    <TextField
+                                        name={"login"}
+                                        label={"Логин"}
+                                        InputLabelProps={{ shrink: !!form?.values?.login }}
+                                    />
+                                    <Button
+                                        fullWidth
+                                        variant="contained"
+                                        color="primary"
+                                        onClick={form?.submitForm}
+                                        disabled={
+                                            !form.isValid || isEqual(form?.values, form?.initialValues)
+                                        }
+                                    >
+                                        Сохранить
+                                    </Button>
+                                </Card>
+                            </>
                         )}
                     />
                     <CustomForm<IChangePassword>
