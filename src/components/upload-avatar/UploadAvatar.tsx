@@ -4,13 +4,14 @@ import { Button, IconButton, LinearProgress, Typography } from "@material-ui/cor
 import { Close, CloudUpload, Edit } from "@material-ui/icons";
 import { ConfirmPopup } from "../../components";
 import { useFile } from "../../hooks";
-import {useFormikContext} from "formik";
+import { useFormikContext } from "formik";
 
 interface IUploadAvatarProps {
     src?: string;
     loading?: boolean;
     imageClassName?: string;
     name: string;
+    buttonVisible?: boolean;
 
     onDeleteAvatar?(): void;
 
@@ -55,7 +56,14 @@ const styles = {
 };
 
 export const UploadAvatar = (props: IUploadAvatarProps) => {
-    const { onDeleteAvatar, uploadAvatar, loading, imageClassName, name } = props;
+    const {
+        onDeleteAvatar,
+        uploadAvatar,
+        loading,
+        imageClassName,
+        name,
+        buttonVisible = true,
+    } = props;
     const [modalOpen, setModalOpen] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
     const { src, file, error, setSrc, deleteFile, loadFile } = useFile({
@@ -128,16 +136,18 @@ export const UploadAvatar = (props: IUploadAvatarProps) => {
                     )}
                 </div>
                 <img src={src} className={cx(styles.avatar, imageClassName)} alt={""} />
-                <Button
-                    variant="contained"
-                    color="primary"
-                    startIcon={<CloudUpload />}
-                    className={styles.button}
-                    onClick={onUploadAvatar}
-                    disabled={loading}
-                >
-                    Загрузить
-                </Button>
+                {buttonVisible && (
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        startIcon={<CloudUpload />}
+                        className={styles.button}
+                        onClick={onUploadAvatar}
+                        disabled={loading}
+                    >
+                        Загрузить
+                    </Button>
+                )}
                 {error && (
                     <Typography color={"error"} align={"center"} className={styles.error}>
                         {error}

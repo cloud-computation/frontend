@@ -1,11 +1,14 @@
-import React, { useEffect } from "react";
-import { usePost } from "../hooks";
+import React, { useContext, useEffect } from "react";
+import { useComment, usePost } from "../hooks";
 import { useParams } from "react-router";
 import { Header } from "../components/header";
 import { css } from "emotion";
 import moment from "moment";
-import {Typography} from "@material-ui/core";
-import {Container} from "../components/container";
+import { Typography } from "@material-ui/core";
+import { Container } from "../components/container";
+import { Comment } from "../components/comment";
+import { AddComment } from "../components/add-comment";
+import { UserContext } from "../app";
 
 const styles = {
     header: css`
@@ -48,11 +51,22 @@ const styles = {
         text-align: center;
         margin-top: 150px;
     `,
+    text: css`
+        margin-bottom: 40px !important;
+    `,
+    comments: css`
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-row-gap: 30px;
+        margin-bottom: 40px !important;
+    `,
 };
 
 export const Post = () => {
     const { post, getPost } = usePost();
     const { id } = useParams();
+    const { comments, deleteComment, createComment, editComment } = useComment(Number(id));
+    const userContext = useContext(UserContext);
 
     useEffect(() => {
         getPost(Number(id));
@@ -74,7 +88,21 @@ export const Post = () => {
                 </div>
             </div>
             <Container>
-                <Typography>{post && post.text}</Typography>
+                <Typography className={styles.text}>{post && post.text}</Typography>
+                <Typography className={styles.text} variant={"h5"}>
+                    Комментарии: {comments.length}
+                </Typography>
+                <div className={styles.comments}>
+                    {comments.map((item, index) => (
+                        <Comment
+                            comment={item}
+                            onDelete={deleteComment}
+                            onEdit={editComment}
+                            key={index}
+                        />
+                    ))}
+                </div>
+                {userContext.user && <AddComment postId={Number(id)} onCreate={createComment} />}
             </Container>
         </>
     );

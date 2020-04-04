@@ -84,6 +84,7 @@ export const CreatePost = () => {
                                 <UploadAvatar
                                     imageClassName={styles.backgroundImage}
                                     name={"background"}
+                                    buttonVisible={false}
                                 />
                                 {get(form.errors, "background") && (
                                     <Typography color={"error"} className={styles.imageError}>
