@@ -53,6 +53,7 @@ const styles = {
     `,
     text: css`
         margin-bottom: 40px !important;
+        white-space: pre;
     `,
     comments: css`
         display: grid;
