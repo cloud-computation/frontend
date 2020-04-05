@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, {useContext, useEffect} from "react";
 import { Container } from "../components/container";
 import { Header } from "../components/header";
 import { css } from "emotion";
@@ -9,9 +9,10 @@ import { IChangePassword, IUser } from "../entity";
 import { TextField } from "../components/text-field";
 import { Button, Card, Typography } from "@material-ui/core";
 import { isEqual, omit } from "lodash";
-import { useCustomSnackbar, useUser } from "../hooks";
+import {useCustomSnackbar, usePost, useUser} from "../hooks";
 import { equalTo, getServerError } from "../utils";
 import * as Yup from "yup";
+import {UserPostsTable} from "../widgets/user-posts-table";
 
 const styles = {
     content: css`
@@ -60,8 +61,13 @@ const changePasswordValidationSchema = Yup.object().shape({
 
 export const Profile = () => {
     const userContext = useContext(UserContext);
-    const { uploadAvatar, updateUser, deleteAvatar, changePassword } = useUser();
+    const { uploadAvatar, updateUser, deleteAvatar, changePassword, userPosts, getUserPosts } = useUser();
     const { showErrorSnackbar, showSuccessSnackbar } = useCustomSnackbar();
+    const { deletePost } = usePost();
+
+    useEffect(() => {
+        getUserPosts();
+    }, []);
 
     const handleAvatar = (file: File) => {
         uploadAvatar({ avatar: file })
@@ -114,6 +120,10 @@ export const Profile = () => {
                     showErrorSnackbar(error.title);
                 }
             });
+    };
+
+    const onDeletePost = (id: number) => {
+        return deletePost(id).then(getUserPosts);
     };
 
     return (
@@ -195,6 +205,8 @@ export const Profile = () => {
                         )}
                     />
                 </div>
+                <Typography variant={"h5"}>Мои статьи</Typography>
+                <UserPostsTable posts={userPosts} onDelete={onDeletePost} />
             </Container>
         </>
     );

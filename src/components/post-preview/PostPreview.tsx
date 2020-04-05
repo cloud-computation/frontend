@@ -1,13 +1,7 @@
 import React from "react";
 import { IPost } from "../../entity";
 import { css } from "emotion";
-import {
-    Card,
-    CardActionArea,
-    CardContent,
-    CardMedia,
-    Typography,
-} from "@material-ui/core";
+import { Card, CardActionArea, CardContent, CardMedia, Typography } from "@material-ui/core";
 import { AppContext } from "../../context";
 
 interface Props {
@@ -23,6 +17,10 @@ const styles = {
     image: css`
         height: 180px;
     `,
+    title: css`
+        overflow: hidden;
+        text-overflow: ellipsis;
+    `,
 };
 
 export const PostPreview = (props: Props) => {
@@ -37,7 +35,7 @@ export const PostPreview = (props: Props) => {
             <CardActionArea>
                 <CardMedia image={post.background} title={post.title} className={styles.image} />
                 <CardContent>
-                    <Typography gutterBottom variant="h5" component="h2">
+                    <Typography gutterBottom variant="h5" component="h2" className={styles.title}>
                         {post.title}
                     </Typography>
                     <Typography

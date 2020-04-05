@@ -1,4 +1,4 @@
-import {IChangePassword, IUpdateAvatar, IUser} from "../entity";
+import {IChangePassword, IPost, IUpdateAvatar, IUser} from "../entity";
 import {transport} from "../service";
 
 export function getUser() {
@@ -19,4 +19,8 @@ export function deleteAvatar() {
 
 export function changePassword(data: IChangePassword) {
     return transport.put<IChangePassword, undefined>("/user/password", data);
+}
+
+export function getUserPosts() {
+    return transport.get<IPost[]>("/user/posts");
 }
