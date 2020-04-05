@@ -13,3 +13,7 @@ export interface ICreatePost {
     text: string;
     file: File;
 }
+
+export interface IUpdatePostBackground {
+    file: File;
+}

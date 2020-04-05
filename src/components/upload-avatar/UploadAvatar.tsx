@@ -10,8 +10,9 @@ interface IUploadAvatarProps {
     src?: string;
     loading?: boolean;
     imageClassName?: string;
-    name: string;
+    name?: string;
     buttonVisible?: boolean;
+    deleteEnable?: boolean;
 
     onDeleteAvatar?(): void;
 
@@ -63,6 +64,7 @@ export const UploadAvatar = (props: IUploadAvatarProps) => {
         imageClassName,
         name,
         buttonVisible = true,
+        deleteEnable = true
     } = props;
     const [modalOpen, setModalOpen] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
@@ -78,7 +80,7 @@ export const UploadAvatar = (props: IUploadAvatarProps) => {
     }, [props.src, setSrc]);
 
     useEffect(() => {
-        if (setFieldValue) {
+        if (setFieldValue && name) {
             setFieldValue(name, src);
         }
     }, [src]);
@@ -129,7 +131,7 @@ export const UploadAvatar = (props: IUploadAvatarProps) => {
                     <IconButton className={styles.icon} onClick={onChoseFile}>
                         <Edit />
                     </IconButton>
-                    {src && (
+                    {src && deleteEnable && (
                         <IconButton className={styles.icon} onClick={onModalOpen}>
                             <Close />
                         </IconButton>

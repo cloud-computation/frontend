@@ -1,12 +1,12 @@
 import React, { createContext, useEffect, useState } from "react";
 import { IConfig, IUser, IUserContext } from "../entity";
 import { transport } from "../service";
-import {Route, Router, Switch} from "react-router";
+import { Route, Router, Switch } from "react-router";
 import { AppContext } from "../context";
-import {CreatePost, Main, Post, Profile} from "../pages";
+import { CreatePost, EditPost, Main, Post, Profile } from "../pages";
 import { SnackbarProvider } from "notistack";
 import { useAuth } from "../hooks";
-import {PrivateRoute} from "../components/private-route";
+import { PrivateRoute } from "../components/private-route";
 
 const config: IConfig = require("../config/config.json"); // данные находятся в консоли firebase
 transport.init(config.serverUrl);
@@ -37,14 +37,30 @@ export const App = () => {
             <SnackbarProvider>
                 <Router history={AppContext.getHistory()}>
                     <Switch>
-                        <PrivateRoute auth={logged} exact path={"/profile"} render={() => <Profile />} />
+                        <PrivateRoute
+                            auth={logged}
+                            exact
+                            path={"/profile"}
+                            render={() => <Profile />}
+                        />
                         <Route path={"/"} exact>
                             <Main />
                         </Route>
-                        <PrivateRoute auth={logged} path={"/post/create"} exact render={() => <CreatePost />} />
+                        <PrivateRoute
+                            auth={logged}
+                            path={"/post/create"}
+                            exact
+                            render={() => <CreatePost />}
+                        />
                         <Route path={"/post/:id"} exact>
                             <Post />
                         </Route>
+                        <PrivateRoute
+                            auth={logged}
+                            path={"/post/:id/edit"}
+                            exact
+                            render={() => <EditPost />}
+                        />
                     </Switch>
                 </Router>
             </SnackbarProvider>

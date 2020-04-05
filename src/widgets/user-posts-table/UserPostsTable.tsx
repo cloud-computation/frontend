@@ -40,6 +40,10 @@ export const UserPostsTable = (props: Props) => {
         AppContext.getHistory().push(`/post/${id}`);
     };
 
+    const goToEditPost = (id: number) => {
+        AppContext.getHistory().push(`/post/${id}/edit`);
+    };
+
     const handleDelete = () => {
         if (onDelete && postId) {
             onDelete(postId).then(() => {
@@ -75,7 +79,11 @@ export const UserPostsTable = (props: Props) => {
                                     </Button>
                                 </TableCell>
                                 <TableCell>
-                                    <Button variant="contained" color="primary">
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        onClick={() => goToEditPost(item.id)}
+                                    >
                                         Редактировать
                                     </Button>
                                 </TableCell>

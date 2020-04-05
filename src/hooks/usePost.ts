@@ -1,4 +1,4 @@
-import { ICreatePost, IPost, TResponse } from "../entity";
+import {ICreatePost, IPost, IUpdatePostBackground, TResponse} from "../entity";
 import { useCallback, useState } from "react";
 import { PostAPI } from "../api";
 
@@ -10,6 +10,7 @@ export function usePost(): {
     createPost: (data: ICreatePost) => Promise<TResponse<{ id: number }>>;
     editPost: (id: number, data: Partial<IPost>) => Promise<void>;
     deletePost: (id: number) => Promise<TResponse<undefined>>;
+    updateBackground: (id: number, data: IUpdatePostBackground) => Promise<TResponse<undefined>>;
 } {
     const [posts, setPosts] = useState<IPost[]>([]);
     const [post, setPost] = useState<IPost | undefined>(undefined);
@@ -34,5 +35,9 @@ export function usePost(): {
         return PostAPI.deletePost(id);
     }, []);
 
-    return { posts, post, createPost, deletePost, editPost, getPost, getPostList };
+    const updateBackground = useCallback((id: number, data: IUpdatePostBackground) => {
+        return PostAPI.updateBackground(id, data);
+    }, []);
+
+    return { posts, post, createPost, deletePost, editPost, getPost, getPostList, updateBackground };
 }
