@@ -29,10 +29,10 @@ const signUpValidationSchema = Yup.object().shape({
     email: Yup.string().email("Некорректный e-mail").required("Обязательно для заполнения"),
     login: Yup.string()
         .required("Обязательно для заполнения")
-        .min(4, "Пароль должен быть не меньше 4 символов"),
+        .min(4, "Логин должен быть не меньше 4 символов"),
     password: Yup.string()
         .required("Обязательно для заполнения")
-        .length(6, "Пароль должен быть не меньше 6 символов"),
+        .min(6, "Пароль должен быть не меньше 6 символов"),
 });
 
 const forgotPasswordValidationSchema = Yup.object().shape({

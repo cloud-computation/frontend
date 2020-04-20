@@ -187,9 +187,9 @@ export const Profile = () => {
                         render={(form) => (
                             <Card variant={"outlined"} className={styles.form}>
                                 <Typography variant={"h5"}>Изменить пароль</Typography>
-                                <TextField name={"password"} label={"Текущий пароль"} />
-                                <TextField name={"newPassword"} label={"Новый пароль"} />
-                                <TextField name={"repeatPassword"} label={"Повтор пароля"} />
+                                <TextField type={"password"} name={"password"} label={"Текущий пароль"} />
+                                <TextField type={"password"} name={"newPassword"} label={"Новый пароль"} />
+                                <TextField type={"password"} name={"repeatPassword"} label={"Повтор пароля"} />
                                 <Button
                                     fullWidth
                                     variant="contained"
