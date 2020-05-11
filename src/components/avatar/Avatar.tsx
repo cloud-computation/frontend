@@ -1,6 +1,5 @@
 import React from "react";
-import { css } from "emotion";
-import cn from "classnames";
+import { css, cx } from "emotion";
 
 const DEFAULT = require("./user.svg");
 
@@ -29,7 +28,7 @@ const styles = {
 export const Avatar = (props: IAvatarProps) => {
     const { url, name, className } = props;
     return (
-        <div className={cn(styles.wrapper, className)}>
+        <div className={cx(styles.wrapper, className)}>
             <img src={url || DEFAULT} alt={name} className={styles.image}/>
         </div>
     );

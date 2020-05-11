@@ -9,6 +9,7 @@ import { Container } from "../components/container";
 import { Comment } from "../components/comment";
 import { AddComment } from "../components/add-comment";
 import { UserContext } from "../app";
+import { Visibility } from "@material-ui/icons";
 
 const styles = {
     header: css`
@@ -43,6 +44,8 @@ const styles = {
         font-weight: 700;
         text-align: center;
         margin-top: 40px;
+        display: flex;
+        justify-content: center;
     `,
     title: css`
         color: #fff;
@@ -61,6 +64,11 @@ const styles = {
         grid-row-gap: 30px;
         margin-bottom: 40px !important;
     `,
+    visibility: css`
+      display: flex;
+      align-items: center;
+      margin-left: 20px;
+`
 };
 
 export const Post = () => {
@@ -84,8 +92,11 @@ export const Post = () => {
                 <div className={styles.info}>
                     <div className={styles.date}>
                         {post && moment(post.createdAt).locale("ru").format("MMM Do YY")}
-                        <div className={styles.title}>{post && post.title}</div>
+                        <div className={styles.visibility}>
+                            <Visibility className={css`margin-right: 10px`} /> {post && post.views}
+                        </div>
                     </div>
+                    <div className={styles.title}>{post && post.title}</div>
                 </div>
             </div>
             <Container>

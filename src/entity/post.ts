@@ -4,6 +4,7 @@ export interface IPost {
     title: string;
     text: string;
     background: string;
+    views: number;
     createdAt: string;
     updatedAt: string;
 }
