@@ -23,7 +23,7 @@
     "@types/yup": "^0.26.33",
     "axios": "^0.19.2",
     "emotion": "^10.0.27",
-    "file-type": "^12.4.2",
+    "file-type": "^16.5.4",
     "firebase": "^7.13.1",
     "formik": "^2.1.4",
     "gh-pages": "^2.2.0",
